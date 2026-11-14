@@ -441,5 +441,6 @@ export function getVault(): Vault {
 
 /** A fingerprint of the whole vault, mixed into content digests so that a change in one note re-renders the notes that link to it. */
 export function vaultSignature(): string {
-  return signatureOf(vaultRoot());
+  // The plugins live next to this file. Editing one must re-render every note too.
+  return `${signatureOf(vaultRoot())}#${signatureOf(resolve(process.cwd(), 'src/lib/obsidian'))}`;
 }

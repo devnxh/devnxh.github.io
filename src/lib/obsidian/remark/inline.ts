@@ -22,7 +22,7 @@ function closingBracket(value: string, from: number, depth: { open: number }): n
   return -1;
 }
 
-function convertFirstFootnote(parent: Node, context: Context): boolean {
+function convertFirstFootnote(parent: Node, root: Node, context: Context): boolean {
   const children = parent.children ?? [];
   for (let start = 0; start < children.length; start += 1) {
     const opener = children[start] as Node;
@@ -52,7 +52,8 @@ function convertFirstFootnote(parent: Node, context: Context): boolean {
 
       context.counters.footnote += 1;
       const identifier = `inline-${context.counters.footnote}`;
-      context.definitions.push({
+      // Added to the tree now, so the transforms that run later (wikilinks, tags) also see the note.
+      root.children?.push({
         type: 'footnoteDefinition',
         identifier,
         label: identifier,
@@ -76,7 +77,7 @@ export function transformInlineFootnotes(tree: Node, context: Context): void {
   walk(tree, (node) => {
     if (LITERAL.has(node.type)) return false;
     if (!node.children?.some((child) => child.type === 'text' && (child.value ?? '').includes('^['))) return;
-    while (convertFirstFootnote(node, context)) {
+    while (convertFirstFootnote(node, tree, context)) {
       /* keep going until this parent has no inline footnote left */
     }
     return;

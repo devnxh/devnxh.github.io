@@ -30,3 +30,6 @@ assets-src/higgsfield/*
 
 # planning notes and AI prompt packs stay on this machine
 docs/
+
+# local tooling
+.claude/

@@ -96,6 +96,7 @@ function addSidenotes(tree: HastNode): void {
 }
 
 interface VFileLike {
+  path?: string;
   data: { astro?: { frontmatter?: Record<string, unknown> }; [key: string]: unknown };
 }
 
@@ -103,9 +104,16 @@ export function rehypeObsidian() {
   return (tree: unknown, file: VFileLike): void => {
     const root = tree as HastNode;
     const toc: TocEntry[] = [];
+    const german = /\.de\.md$/i.test(file.path ?? '');
     let sections = 0;
 
     visit(root, (node, parent) => {
+      // The heading remark adds above the footnote list is a label, not a section.
+      if (node.tagName === 'h2' && node.properties?.id === 'footnote-label') {
+        node.properties.className = ['footnotes-label'];
+        if (german) node.children = [{ type: 'text', value: 'Fußnoten' }];
+        return;
+      }
       const heading = /^h([2-4])$/.exec(node.tagName ?? '');
       if (heading && typeof node.properties?.id === 'string') {
         const entry: TocEntry = { depth: Number(heading[1]), id: node.properties.id, text: textContent(node).trim() };

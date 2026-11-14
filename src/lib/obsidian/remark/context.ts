@@ -1,5 +1,4 @@
 import { posix } from 'node:path';
-import type { Node } from '../tree';
 import type { Attachment, Lang, NoteFile, Vault } from '../vault';
 
 /** State shared by the transforms while one Markdown file is rendered. */
@@ -16,8 +15,6 @@ export interface Context {
   stack: string[];
   /** Facts about the page that the layout needs (which optional assets to load). */
   flags: { hasMath: boolean; hasMermaid: boolean };
-  /** Footnote definitions created from inline footnotes, appended to the page root at the end. */
-  definitions: Node[];
   counters: { footnote: number };
 }
 
@@ -30,7 +27,6 @@ export function createContext(vault: Vault, host?: NoteFile): Context {
     depth: 0,
     stack: host ? [host.id] : [],
     flags: { hasMath: false, hasMermaid: false },
-    definitions: [],
     counters: { footnote: 0 },
   };
 }

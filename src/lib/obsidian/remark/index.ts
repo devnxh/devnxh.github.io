@@ -46,7 +46,6 @@ function findHost(vault: Vault, path: string | undefined): NoteFile | undefined 
 export function renderObsidian(tree: Node, vault: Vault, host?: NoteFile): Context {
   const context = createContext(vault, host);
   transformTree(tree, context);
-  tree.children = [...(tree.children ?? []), ...context.definitions];
   return context;
 }
 

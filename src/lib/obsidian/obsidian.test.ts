@@ -97,6 +97,18 @@ describe('remarkObsidian', () => {
     expect(html).not.toContain('^fact');
   });
 
+  it('resolves wikilinks inside inline footnotes', () => {
+    const html = render('Claim.^[See [[Alpha Note|the first note]].]');
+    expect(html).toContain('href="/writeups/alpha-note/"');
+    expect(html).not.toContain('[[');
+  });
+
+  it('renders video and audio embeds as players and links to other files', () => {
+    const html = render('![[doc.pdf]]\n\nA link: [[doc.pdf|the PDF]].');
+    expect(html).toContain('<object class="pdf" data="/attachments/doc.pdf"');
+    expect(html).toContain('<a href="/attachments/doc.pdf">the PDF</a>');
+  });
+
   it('stops embed loops', () => {
     const html = render('![[Loop B]]', 'writeups/loop a.md');
     expect(html.match(/class="embed"/g)?.length).toBe(1);
