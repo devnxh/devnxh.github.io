@@ -47,7 +47,7 @@ Two of the defects from the first run:
 - A timezone bug broke daily streaks for users practising after 5:30 PM IST.
 - A chart crashed when a learner had fewer than 2 sessions.
 
-The cases included negative and boundary tests: a wrong password, an unsupported file type, and the 70% score threshold that unlocks the next level.
+The cases included negative and boundary tests: a wrong password, an unsupported file type, and the 70% score needed to reach the next level.
 
 ## What I learned
 

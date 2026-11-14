@@ -20,7 +20,7 @@ Entry-level Security Analyst, SOC Analyst L1 or Information Security Analyst rol
 This was my final-year industry internship. I worked in a team on the [[Speech Therapy]] platform, on development and testing.
 
 - I wrote and ran 15 functional and integration test cases. On the first run 12 of 15 passed. The 3 defects found included a timezone bug that broke daily streaks for users practising after 5:30 PM IST, and a chart crash with fewer than 2 sessions.
-- I re-tested after the fixes until all 15 passed, including negative and boundary cases such as a wrong password, an unsupported file type and the 70% score threshold that unlocks the next level.
+- I re-tested after the fixes until all 15 passed, including negative and boundary cases such as a wrong password, an unsupported file type and the 70% score needed to reach the next level.
 
 ## Education
 
