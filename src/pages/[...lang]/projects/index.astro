@@ -1,0 +1,60 @@
+---
+import Cover from '../../../components/Cover.astro';
+import ProjectRow from '../../../components/ProjectRow.astro';
+import Section from '../../../components/Section.astro';
+import { langFromParam, plural, staticLangPaths, useTranslations } from '../../../i18n';
+import Base from '../../../layouts/Base.astro';
+import { getProjects } from '../../../lib/content';
+import { site } from '../../../site.config';
+
+export const getStaticPaths = staticLangPaths;
+
+const lang = langFromParam(Astro.params.lang);
+const t = useTranslations(lang);
+const projects = await getProjects(lang);
+const featured = projects.find((project) => project.featured);
+const rest = projects.filter((project) => project !== featured);
+---
+
+<Base lang={lang} title={t('projects.title')} section="projects" description={projects.map((project) => project.title).join(', ')}>
+  <header class="page-head">
+    <h1>{t('projects.title')}</h1>
+    <p class="lede">{plural(t, 'projects.count', projects.length)}</p>
+  </header>
+
+  <div class="notebook">
+    {
+      featured && (
+        <Section index={0}>
+          <article class="featured">
+            <a href={featured.url} tabindex="-1" aria-hidden="true" style="text-decoration:none">
+              <Cover title={featured.title} caption={`${t('exhibit')} ${featured.exhibit} · ${featured.title}`} cover={featured.cover} priority />
+            </a>
+            <div>
+              <span class="stamp">{t('stamp.featured')}</span>
+              <h2 class="featured-title" style="font-size: var(--text-h2)"><a href={featured.url} style="text-decoration-color: transparent">{featured.title}</a></h2>
+              <p class="featured-summary">{featured.summary}</p>
+              <dl class="meta" style="margin-top: var(--s-6)">
+                {featured.period && <div><dt>{t('project.period')}</dt><dd>{featured.period}</dd></div>}
+                {featured.role && <div><dt>{t('project.role')}</dt><dd>{featured.role}</dd></div>}
+                <div><dt>{t('project.stack')}</dt><dd>{featured.stack.join(', ')}</dd></div>
+              </dl>
+              <ul class="text-links">
+                <li><a href={featured.url}>{t('projects.caseStudy')}</a></li>
+                {featured.repo && <li><a href={featured.repo}>GitHub</a></li>}
+              </ul>
+            </div>
+          </article>
+        </Section>
+      )
+    }
+
+    <Section index={1}>
+      <ol class="rows">
+        {rest.map((project, index) => <ProjectRow project={project} index={index + 1} />)}
+      </ol>
+      <span class="byte-row" aria-hidden="true">4D 5A 90 00 03 00 00 00 04 00 00 00 FF FF 00 00&nbsp;&nbsp;MZ..............</span>
+      <p class="mono"><a href={site.links.github}>{t('projects.more')}</a></p>
+    </Section>
+  </div>
+</Base>

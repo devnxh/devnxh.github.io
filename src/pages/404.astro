@@ -1,0 +1,36 @@
+---
+/**
+ * GitHub Pages serves this file for every missing URL, whatever the language,
+ * so it is written once, in English, with links into both language versions.
+ */
+import { useTranslations } from '../i18n';
+import Base from '../layouts/Base.astro';
+
+const lang = 'en';
+const t = useTranslations(lang);
+---
+
+<Base lang={lang} title={t('404.title')} translated={false} noindex ogKey="index">
+  <div class="notebook">
+    <section class="section grid not-found">
+      <div class="margin"><span class="offset" aria-hidden="true">0x0404</span></div>
+      <div class="body">
+        <h1>{t('404.title')}</h1>
+        <p>{t('404.text')}</p>
+        <span class="byte-row" aria-hidden="true">4D 5A 90 00 03 00 00 00 04 00 00 00 FF FF 00 00&nbsp;&nbsp;MZ..............</span>
+        <p class="js-only" style="margin-top: 0">
+          <button class="search-button" type="button" data-search-open aria-haspopup="dialog">
+            <span>{t('search.open')}</span>
+            <kbd aria-hidden="true">/</kbd>
+          </button>
+        </p>
+        <ul class="text-links" style="margin-top: var(--s-8)">
+          <li><a href="/">{t('nav.home')}</a></li>
+          <li><a href="/projects/">{t('nav.projects')}</a></li>
+          <li><a href="/writeups/">{t('nav.writeups')}</a></li>
+          <li><a href="/de/" hreflang="de" lang="de">Deutsch</a></li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</Base>

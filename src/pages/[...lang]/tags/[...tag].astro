@@ -1,0 +1,51 @@
+---
+import ProjectRow from '../../../components/ProjectRow.astro';
+import Section from '../../../components/Section.astro';
+import WriteupRow from '../../../components/WriteupRow.astro';
+import { LANGS, langFromParam, langParam, localise, plural, useTranslations } from '../../../i18n';
+import Base from '../../../layouts/Base.astro';
+import { getTags } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LANGS) {
+    for (const group of await getTags(lang)) paths.push({ params: { lang: langParam(lang), tag: group.tag } });
+  }
+  return paths;
+}
+
+const lang = langFromParam(Astro.params.lang);
+const t = useTranslations(lang);
+const group = (await getTags(lang)).find((entry) => entry.tag === Astro.params.tag);
+if (!group) return Astro.redirect('/404/');
+---
+
+<Base lang={lang} title={`#${group.tag}`} section="writeups" ogKey={lang === 'de' ? 'de/tags' : 'tags'} description={`${t('tags.tagged')} #${group.tag}`}>
+  <header class="page-head">
+    <p class="breadcrumb"><a href={localise('/tags/', lang)}>{t('tags.all')}</a></p>
+    <h1>#{group.tag}</h1>
+    <p class="lede">{plural(t, 'tags.count', group.count)}</p>
+  </header>
+  <div class="notebook">
+    {
+      group.writeups.length > 0 && (
+        <Section index={0}>
+          <div class="section-head"><h2>{t('writeups.title')}</h2></div>
+          <ol class="rows">
+            {group.writeups.map((writeup) => <WriteupRow writeup={writeup} lang={lang} />)}
+          </ol>
+        </Section>
+      )
+    }
+    {
+      group.projects.length > 0 && (
+        <Section index={group.writeups.length > 0 ? 1 : 0}>
+          <div class="section-head"><h2>{t('projects.title')}</h2></div>
+          <ol class="rows">
+            {group.projects.map((project, index) => <ProjectRow project={project} index={index} />)}
+          </ol>
+        </Section>
+      )
+    }
+  </div>
+</Base>

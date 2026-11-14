@@ -1,0 +1,88 @@
+---
+import { existsSync } from 'node:fs';
+import { render } from 'astro:content';
+import sharp from 'sharp';
+import ContentNotice from '../../components/ContentNotice.astro';
+import Prose from '../../components/Prose.astro';
+import { langFromParam, staticLangPaths, switchLang, useTranslations } from '../../i18n';
+import Base from '../../layouts/Base.astro';
+import { getPage } from '../../lib/content';
+import { site } from '../../site.config';
+
+export const getStaticPaths = staticLangPaths;
+
+const lang = langFromParam(Astro.params.lang);
+const t = useTranslations(lang);
+const page = await getPage('about', lang);
+if (!page) throw new Error('vault/pages/about.md is missing. The About page needs it.');
+
+const { Content, remarkPluginFrontmatter } = await render(page.entry);
+const hasCv = existsSync(`public${site.cvPath}`);
+const photo = existsSync(`public${site.photoPath}`) ? await sharp(`public${site.photoPath}`).metadata() : undefined;
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  url: site.url,
+  jobTitle: 'Security Analyst',
+  description: page.description,
+  address: { '@type': 'PostalAddress', addressLocality: 'Bhavnagar', addressRegion: 'Gujarat', addressCountry: 'IN' },
+  sameAs: Object.values(site.links),
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Government Engineering College Bhavnagar' },
+};
+---
+
+<Base
+  lang={lang}
+  title={page.title}
+  description={page.description}
+  section="about"
+  jsonLd={person}
+  hasMath={Boolean(remarkPluginFrontmatter.hasMath)}
+  canonical={page.fallback ? switchLang(Astro.url.pathname, 'en') : undefined}
+>
+  <header class="page-head">
+    <h1>{page.title}</h1>
+  </header>
+
+  <ContentNotice lang={lang} fallback={page.fallback} machine={page.machine} />
+
+  <div class="notebook">
+    <section class="section grid" id="glance" style="padding-top: 0">
+      <div class="margin"></div>
+      <div class="body">
+        <div class="section-head"><h2>{t('about.glance')}</h2></div>
+        <dl class="meta" style="max-width: 52rem">
+          <div><dt>{t('about.roles')}</dt><dd>{site.targetRoles.join(' · ')}</dd></div>
+          <div><dt>{t('about.location')}</dt><dd>{site.location[lang]}</dd></div>
+          <div><dt>{t('about.availability')}</dt><dd>{site.availability[lang]}</dd></div>
+          <div><dt>{t('about.setup')}</dt><dd>{site.workSetup[lang]}</dd></div>
+          <div><dt>{t('about.languages')}</dt><dd>{site.languages[lang]}</dd></div>
+        </dl>
+        {
+          hasCv && (
+            <p class="actions">
+              <a class="button button--primary" href={site.cvPath} download>{t('home.cv')}</a>
+            </p>
+          )
+        }
+        {
+          photo && (
+            <p style="margin-top: var(--s-8); max-width: 14rem">
+              {/* The site's duotone treatment is a CSS filter. The photo itself is never altered. */}
+              <img src={site.photoPath} alt={site.name} width={photo.width} height={photo.height} loading="lazy" decoding="async" style="filter: grayscale(1) contrast(1.05); border: 1px solid var(--rule)" />
+            </p>
+          )
+        }
+      </div>
+    </section>
+
+    <div class="grid" style="padding-block: var(--s-12)">
+      <div class="margin"></div>
+      <div class="body">
+        <Prose lang={lang} contentLang={page.contentLang}><Content /></Prose>
+      </div>
+    </div>
+  </div>
+</Base>

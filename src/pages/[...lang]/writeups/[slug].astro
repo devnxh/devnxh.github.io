@@ -1,0 +1,121 @@
+---
+import { render } from 'astro:content';
+import ContentNotice from '../../../components/ContentNotice.astro';
+import Cover from '../../../components/Cover.astro';
+import NoteRefs from '../../../components/NoteRefs.astro';
+import Prose from '../../../components/Prose.astro';
+import Toc from '../../../components/Toc.astro';
+import { LANGS, formatDate, isoDate, langFromParam, langParam, localise, switchLang, useTranslations } from '../../../i18n';
+import Base from '../../../layouts/Base.astro';
+import { getBacklinks, getWriteups, relatedByTag } from '../../../lib/content';
+import type { TocEntry } from '../../../lib/obsidian/rehype';
+import { tagUrl } from '../../../lib/obsidian/remark/inline';
+import { site } from '../../../site.config';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LANGS) {
+    for (const writeup of await getWriteups(lang)) paths.push({ params: { lang: langParam(lang), slug: writeup.slug } });
+  }
+  return paths;
+}
+
+const lang = langFromParam(Astro.params.lang);
+const t = useTranslations(lang);
+const writeups = await getWriteups(lang);
+const index = writeups.findIndex((item) => item.slug === Astro.params.slug);
+const writeup = writeups[index];
+if (!writeup) return Astro.redirect('/404/');
+
+const { Content, remarkPluginFrontmatter } = await render(writeup.entry);
+const toc = (remarkPluginFrontmatter.toc ?? []) as TocEntry[];
+const hasMath = Boolean(remarkPluginFrontmatter.hasMath);
+
+const backlinks = await getBacklinks(writeup.note.id, lang);
+const related = relatedByTag(writeup, writeups);
+// The list is newest first, so the newer write-up is "next".
+const newer = writeups[index - 1];
+const older = writeups[index + 1];
+const stamp = writeup.hidden ? 'draft' : writeup.status;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: writeup.title,
+  description: writeup.description,
+  datePublished: writeup.date.toISOString(),
+  dateModified: (writeup.updated ?? writeup.date).toISOString(),
+  inLanguage: writeup.contentLang,
+  url: new URL(writeup.url, site.url).href,
+  mainEntityOfPage: new URL(writeup.url, site.url).href,
+  author: { '@type': 'Person', name: site.name, url: site.url },
+  keywords: writeup.tags.join(', '),
+  image: new URL(`/og/${writeup.url.replace(/^\/|\/$/g, '')}.png`, site.url).href,
+};
+---
+
+<Base
+  lang={lang}
+  title={writeup.title}
+  description={writeup.description}
+  section="writeups"
+  type="article"
+  jsonLd={schema}
+  hasMath={hasMath}
+  canonical={writeup.fallback ? switchLang(Astro.url.pathname, 'en') : undefined}
+>
+  <div class="case-header">
+    <dl class="meta">
+      <div><dt>{t('writeup.case')}</dt><dd data-pagefind-meta="case">{writeup.caseId}</dd></div>
+      <div><dt>{t('writeup.date')}</dt><dd><time datetime={isoDate(writeup.date)}>{formatDate(writeup.date, lang)}</time></dd></div>
+      {writeup.updated && <div><dt>{t('writeup.updated')}</dt><dd><time datetime={isoDate(writeup.updated)}>{formatDate(writeup.updated, lang)}</time></dd></div>}
+      {writeup.platform && <div><dt>{t('writeup.platform')}</dt><dd>{writeup.platform}</dd></div>}
+      <div><dt>{t('writeup.category')}</dt><dd>{t(`category.${writeup.category}`)}</dd></div>
+      {writeup.difficulty && <div><dt>{t('writeup.difficulty')}</dt><dd>{t(`difficulty.${writeup.difficulty}`)}</dd></div>}
+      {writeup.tools.length > 0 && <div><dt>{t('writeup.tools')}</dt><dd>{writeup.tools.join(', ')}</dd></div>}
+      {writeup.status && <div><dt>{t('writeup.status')}</dt><dd>{t(`status.${writeup.status}`)}</dd></div>}
+    </dl>
+    {stamp && <span class="stamp">{t(`stamp.${stamp}`)}</span>}
+  </div>
+
+  <header class="page-head page-head--article">
+    <p class="breadcrumb"><a href={localise('/writeups/', lang)}>{t('writeups.title')}</a> / {writeup.caseId}</p>
+    <h1 data-pagefind-meta="title">{writeup.title}</h1>
+    <p class="article-meta">
+      <span>{t('writeup.minutes', { n: writeup.minutes })}</span>
+      {writeup.tags.map((tag) => <a class="tag" href={tagUrl(tag, { lang })}>#{tag}</a>)}
+      <a href={writeup.sourceUrl}>{t('writeup.source')}</a>
+    </p>
+  </header>
+
+  <ContentNotice lang={lang} fallback={writeup.fallback} machine={writeup.machine} />
+
+  {
+    writeup.cover && (
+      <div style="max-width: 48rem; margin-bottom: var(--s-12)">
+        <Cover title={writeup.title} cover={writeup.cover} priority />
+      </div>
+    )
+  }
+
+  <div class="notebook">
+    <div class="grid article">
+      <div class="margin"></div>
+      <div class="body">
+        <article class="article-main">
+          <Prose lang={lang} contentLang={writeup.contentLang}><Content /></Prose>
+
+          <div class="aftermatter" data-pagefind-ignore>
+            <NoteRefs heading={t('backlinks')} refs={backlinks} lang={lang} />
+            <NoteRefs heading={t('writeup.related')} refs={related.map((other) => ({ id: other.note.id, collection: 'writeups', title: other.title, url: other.url, caseId: other.caseId }))} lang={lang} />
+            <nav class="prev-next" aria-label={`${t('prev')} / ${t('next')}`}>
+              {older && <a href={older.url} rel="prev">← {older.caseId} · {older.title}</a>}
+              {newer && <a href={newer.url} rel="next">{newer.caseId} · {newer.title} →</a>}
+            </nav>
+          </div>
+        </article>
+        <Toc entries={toc} lang={lang} />
+      </div>
+    </div>
+  </div>
+</Base>

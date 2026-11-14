@@ -1,0 +1,90 @@
+---
+import Section from '../../../components/Section.astro';
+import WriteupRow from '../../../components/WriteupRow.astro';
+import { langFromParam, localise, plural, staticLangPaths, useTranslations } from '../../../i18n';
+import Base from '../../../layouts/Base.astro';
+import { getWriteups } from '../../../lib/content';
+
+export const getStaticPaths = staticLangPaths;
+
+const lang = langFromParam(Astro.params.lang);
+const t = useTranslations(lang);
+const writeups = await getWriteups(lang);
+
+const years = [...new Set(writeups.map((writeup) => writeup.date.getUTCFullYear()))].sort((a, b) => b - a);
+const categories = [...new Set(writeups.map((writeup) => writeup.category))].sort();
+const difficulties = (['easy', 'medium', 'hard', 'insane'] as const).filter((level) => writeups.some((writeup) => writeup.difficulty === level));
+const tags = [...new Set(writeups.flatMap((writeup) => writeup.tags))].sort();
+---
+
+<Base lang={lang} title={t('writeups.title')} section="writeups">
+  <header class="page-head">
+    <h1>{t('writeups.title')}</h1>
+    <p class="lede">
+      {plural(t, 'writeups.count', writeups.length)}
+      <span class="js-only"> · {t('writeups.searchHint')}</span>
+    </p>
+  </header>
+
+  <div class="notebook">
+    {
+      writeups.length === 0 ? (
+        <Section index={0}>
+          <p class="empty">{t('writeups.empty')}</p>
+        </Section>
+      ) : (
+        <>
+          <Section index={0} class="js-only">
+            <form class="filters" aria-label={t('writeups.filter')} onsubmit="return false">
+              <fieldset class="filter-group">
+                <legend class="label">{t('writeups.filter.category')}</legend>
+                <button type="button" data-filter="category" data-value="" aria-pressed="true">{t('writeups.filter.all')}</button>
+                {categories.map((category) => <button type="button" data-filter="category" data-value={category} aria-pressed="false">{t(`category.${category}`)}</button>)}
+              </fieldset>
+              {
+                difficulties.length > 0 && (
+                  <fieldset class="filter-group">
+                    <legend class="label">{t('writeups.filter.difficulty')}</legend>
+                    <button type="button" data-filter="difficulty" data-value="" aria-pressed="true">{t('writeups.filter.all')}</button>
+                    {difficulties.map((level) => <button type="button" data-filter="difficulty" data-value={level} aria-pressed="false">{t(`difficulty.${level}`)}</button>)}
+                  </fieldset>
+                )
+              }
+              {
+                tags.length > 0 && (
+                  <fieldset class="filter-group">
+                    <legend class="label">{t('writeups.filter.tag')}</legend>
+                    <button type="button" data-filter="tag" data-value="" aria-pressed="true">{t('writeups.filter.all')}</button>
+                    {tags.map((tag) => <button type="button" data-filter="tag" data-value={tag} aria-pressed="false">#{tag}</button>)}
+                  </fieldset>
+                )
+              }
+            </form>
+            <p class="empty" data-filter-empty hidden>{t('writeups.filter.none')}</p>
+          </Section>
+
+          {years.map((year, index) => (
+            <Section index={index + 1}>
+              <div data-year-group>
+                <h2 class="year-head">{year}</h2>
+                <ol class="rows">
+                  {writeups.filter((writeup) => writeup.date.getUTCFullYear() === year).map((writeup) => <WriteupRow writeup={writeup} lang={lang} />)}
+                </ol>
+              </div>
+            </Section>
+          ))}
+        </>
+      )
+    }
+  </div>
+
+  <span class="byte-row" aria-hidden="true">4D 5A 90 00 03 00 00 00 04 00 00 00 FF FF 00 00&nbsp;&nbsp;MZ..............</span>
+  <ul class="text-links">
+    <li><a href={localise('/rss.xml', lang)}>{t('footer.rss')}</a></li>
+    <li><a href={localise('/tags/', lang)}>{t('tags.title')}</a></li>
+  </ul>
+
+  <script>
+    import '../../../scripts/filters';
+  </script>
+</Base>

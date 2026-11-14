@@ -1,0 +1,160 @@
+---
+import { existsSync } from 'node:fs';
+import ContactLinks from '../../components/ContactLinks.astro';
+import Cover from '../../components/Cover.astro';
+import ProjectRow from '../../components/ProjectRow.astro';
+import Section from '../../components/Section.astro';
+import WriteupRow from '../../components/WriteupRow.astro';
+import { formatDate, isoDate, langFromParam, localise, staticLangPaths, useTranslations } from '../../i18n';
+import Base from '../../layouts/Base.astro';
+import { getProjects, getWriteups } from '../../lib/content';
+import { site } from '../../site.config';
+
+export const getStaticPaths = staticLangPaths;
+
+const lang = langFromParam(Astro.params.lang);
+const t = useTranslations(lang);
+
+const [projects, writeups] = await Promise.all([getProjects(lang), getWriteups(lang)]);
+const featured = projects.find((project) => project.featured) ?? projects[0];
+const others = projects.filter((project) => project !== featured);
+const latest = writeups.slice(0, 5);
+const hasCv = existsSync(`public${site.cvPath}`);
+const built = new Date();
+
+// The positioning line, split around the words that get the red-pen underline.
+const line = site.positioning[lang];
+const emphasis = site.positioningEmphasis[lang];
+const at = line.indexOf(emphasis);
+const [before, marked, after] = at === -1 ? [line, '', ''] : [line.slice(0, at), emphasis, line.slice(at + emphasis.length)];
+
+const proof = site.proof.map((item) => ({
+  label: item.label[lang],
+  href:
+    item.href ??
+    (item.project ? localise(`/projects/${item.project}/`, lang) : `${localise(`/${item.page}/`, lang)}${item.hash ? `#${item.hash[lang]}` : ''}`),
+}));
+const projectUrl = (slug: string | undefined) => projects.find((project) => project.slug === slug)?.url;
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  url: site.url,
+  jobTitle: 'Security Analyst',
+  description: site.description[lang],
+  address: { '@type': 'PostalAddress', addressLocality: 'Bhavnagar', addressRegion: 'Gujarat', addressCountry: 'IN' },
+  sameAs: Object.values(site.links),
+  knowsLanguage: ['en', 'gu', 'hi', 'de'],
+};
+---
+
+<Base lang={lang} description={site.description[lang]} jsonLd={person}>
+  <div class="masthead">
+    <div class="masthead-main">
+      <h1>{site.name}</h1>
+      <p class="positioning">
+        {before}{
+          marked && (
+            <span class="pen">
+              {marked}
+              <svg viewBox="0 0 200 10" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M2 6.5c22-4 41 3.5 63 .5s38-4.500 62-1.500 47 3 71-1" vector-effect="non-scaling-stroke" />
+              </svg>
+            </span>
+          )
+        }{after}
+      </p>
+      <p class="status-line"><span class="label">{t('home.status')}</span>{site.status[lang]}</p>
+      <div class="actions">
+        {hasCv && <a class="button button--primary" href={site.cvPath} download>{t('home.cv')}</a>}
+        <a class:list={['button', { 'button--primary': !hasCv }]} href={localise('/projects/', lang)}>{t('home.seeProjects')}</a>
+      </div>
+      <ContactLinks lang={lang} />
+    </div>
+
+    <dl class="meta meta--compact file-header">
+      <div><dt>{t('home.file')}</dt><dd>{site.fileName}</dd></div>
+      <div><dt>{t('home.updated')}</dt><dd><time datetime={isoDate(built)}>{formatDate(built, lang, 'short')}</time></dd></div>
+      <div><dt>{t('home.cases')}</dt><dd class="num">{writeups.length}</dd></div>
+      <div><dt>{t('home.projects')}</dt><dd class="num">{projects.length}</dd></div>
+    </dl>
+  </div>
+
+  <ul class="proof" aria-label={t('home.proof')}>
+    {proof.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+  </ul>
+
+  <div class="notebook">
+    <Section index={0} id="work">
+      <div class="section-head"><h2>{t('home.selected')}</h2></div>
+      {
+        featured && (
+          <article class="featured">
+            <a href={featured.url} tabindex="-1" aria-hidden="true" style="text-decoration:none">
+              <Cover title={featured.title} caption={`${t('exhibit')} ${featured.exhibit} · ${featured.title}`} cover={featured.cover} priority />
+            </a>
+            <div>
+              <span class="stamp">{t('stamp.featured')}</span>
+              <h3><a href={featured.url}>{featured.title}</a></h3>
+              <p class="featured-summary">{featured.summary}</p>
+              <ul class="highlights">
+                {featured.highlights.slice(0, 3).map((highlight) => <li>{highlight}</li>)}
+              </ul>
+              <p class="stack">{featured.stack.join(' · ')}</p>
+              <ul class="text-links">
+                <li><a href={featured.url}>{t('projects.caseStudy')}</a></li>
+                {featured.repo && <li><a href={featured.repo}>GitHub</a></li>}
+              </ul>
+            </div>
+          </article>
+        )
+      }
+      <ol class="rows">
+        {others.map((project, index) => <ProjectRow project={project} index={index + 1} variant="compact" />)}
+      </ol>
+    </Section>
+
+    <Section index={1} id="cases">
+      <div class="section-head">
+        <h2>{t('home.latest')}</h2>
+        {latest.length > 0 && <a href={localise('/writeups/', lang)}>{t('home.latest.all')}</a>}
+      </div>
+      {
+        latest.length > 0 ? (
+          <ol class="rows">
+            {latest.map((writeup) => <WriteupRow writeup={writeup} lang={lang} />)}
+          </ol>
+        ) : (
+          <p class="empty">{t('home.latest.empty')}</p>
+        )
+      }
+    </Section>
+
+    <Section index={2} id="toolbox">
+      <div class="section-head"><h2>{t('home.toolbox')}</h2></div>
+      <div class="toolbox">
+        {
+          site.toolbox.map((group) => (
+            <div>
+              <h3>{group.title[lang]}</h3>
+              <ul>
+                {group.skills.map((skill) => {
+                  const label = lang === 'de' ? (skill.de ?? skill.label) : skill.label;
+                  const href = projectUrl(skill.project);
+                  return <li>{href ? <a href={href}>{label}</a> : label}</li>;
+                })}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </Section>
+
+    <Section index={3} id="contact">
+      <div class="section-head"><h2>{t('home.contact')}</h2></div>
+      <p style="max-width: 36ch; font-size: var(--text-h4); margin-bottom: var(--s-6)">{t('home.contact.text')}</p>
+      <ContactLinks lang={lang} />
+    </Section>
+  </div>
+</Base>

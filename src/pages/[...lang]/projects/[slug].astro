@@ -1,0 +1,107 @@
+---
+import { render } from 'astro:content';
+import ContentNotice from '../../../components/ContentNotice.astro';
+import Cover from '../../../components/Cover.astro';
+import NoteRefs from '../../../components/NoteRefs.astro';
+import Prose from '../../../components/Prose.astro';
+import Toc from '../../../components/Toc.astro';
+import { LANGS, langFromParam, langParam, localise, switchLang, useTranslations } from '../../../i18n';
+import Base from '../../../layouts/Base.astro';
+import { getBacklinks, getProjects, getRelatedWriteups } from '../../../lib/content';
+import type { TocEntry } from '../../../lib/obsidian/rehype';
+import { site } from '../../../site.config';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LANGS) {
+    for (const project of await getProjects(lang)) paths.push({ params: { lang: langParam(lang), slug: project.slug } });
+  }
+  return paths;
+}
+
+const lang = langFromParam(Astro.params.lang);
+const t = useTranslations(lang);
+const projects = await getProjects(lang);
+const index = projects.findIndex((item) => item.slug === Astro.params.slug);
+const project = projects[index];
+if (!project) return Astro.redirect('/404/');
+
+const { Content, remarkPluginFrontmatter } = await render(project.entry);
+const toc = (remarkPluginFrontmatter.toc ?? []) as TocEntry[];
+const hasMath = Boolean(remarkPluginFrontmatter.hasMath);
+
+const backlinks = await getBacklinks(project.note.id, lang);
+const related = await getRelatedWriteups(project.note.id, lang);
+const relatedIds = new Set(related.map((writeup) => writeup.note.id));
+const otherBacklinks = backlinks.filter((ref) => !relatedIds.has(ref.id));
+const previous = projects[index - 1];
+const next = projects[index + 1];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: project.title,
+  description: project.summary,
+  url: new URL(project.url, site.url).href,
+  inLanguage: project.contentLang,
+  author: { '@type': 'Person', name: site.name, url: site.url },
+  keywords: project.stack.join(', '),
+  ...(project.repo ? { codeRepository: project.repo, sameAs: project.repo } : {}),
+};
+---
+
+<Base
+  lang={lang}
+  title={project.title}
+  description={project.summary}
+  section="projects"
+  type="article"
+  jsonLd={schema}
+  hasMath={hasMath}
+  canonical={project.fallback ? switchLang(Astro.url.pathname, 'en') : undefined}
+>
+  <header class="page-head page-head--article">
+    <p class="breadcrumb"><a href={localise('/projects/', lang)}>{t('projects.title')}</a> / {project.title}</p>
+    <h1 data-pagefind-meta="title">{project.title}</h1>
+    <p class="summary">{project.summary}</p>
+  </header>
+
+  <ContentNotice lang={lang} fallback={project.fallback} machine={project.machine} />
+
+  <div class="case-header">
+    <dl class="meta">
+      {project.role && <div><dt>{t('project.role')}</dt><dd>{project.role}</dd></div>}
+      {project.period && <div><dt>{t('project.period')}</dt><dd>{project.period}</dd></div>}
+      {project.stack.length > 0 && <div><dt>{t('project.stack')}</dt><dd>{project.stack.join(', ')}</dd></div>}
+      {project.repo && <div><dt>{t('project.repo')}</dt><dd><a href={project.repo}>{project.repo.replace(/^https?:\/\//, '')}</a></dd></div>}
+      {project.demo && <div><dt>{t('project.demo')}</dt><dd><a href={project.demo}>{project.demo.replace(/^https?:\/\//, '')}</a></dd></div>}
+      {project.status && <div><dt>{t('project.status')}</dt><dd>{t(`project.status.${project.status}`)}</dd></div>}
+    </dl>
+    {project.hidden ? <span class="stamp">{t('stamp.draft')}</span> : project.featured && <span class="stamp">{t('stamp.featured')}</span>}
+  </div>
+
+  <div style="max-width: 48rem; margin-bottom: var(--s-12)">
+    <Cover title={project.title} caption={`${t('exhibit')} ${project.exhibit} · ${project.title}`} cover={project.cover} priority />
+  </div>
+
+  <div class="notebook">
+    <div class="grid article">
+      <div class="margin"></div>
+      <div class="body">
+        <article class="article-main">
+          <Prose lang={lang} contentLang={project.contentLang}><Content /></Prose>
+
+          <div class="aftermatter" data-pagefind-ignore>
+            <NoteRefs heading={t('project.related')} refs={related.map((writeup) => ({ id: writeup.note.id, collection: 'writeups', title: writeup.title, url: writeup.url, caseId: writeup.caseId }))} lang={lang} />
+            <NoteRefs heading={t('backlinks')} refs={otherBacklinks} lang={lang} />
+            <nav class="prev-next" aria-label={`${t('prev')} / ${t('next')}`}>
+              {previous && <a href={previous.url} rel="prev">← {previous.title}</a>}
+              {next && <a href={next.url} rel="next">{next.title} →</a>}
+            </nav>
+          </div>
+        </article>
+        <Toc entries={toc} lang={lang} />
+      </div>
+    </div>
+  </div>
+</Base>
