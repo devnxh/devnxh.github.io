@@ -1,0 +1,32 @@
+# build output and caches
+dist/
+.astro/
+node_modules/
+
+# logs and local env
+npm-debug.log*
+.env
+.env.*
+!.env.example
+
+# OS and editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Obsidian: keep shared settings, ignore per-machine state
+vault/.obsidian/workspace*.json
+vault/.obsidian/cache
+vault/.trash/
+
+# private drafts never leave this machine
+vault/_private/
+
+# raw AI images are large; the processed versions in src/assets are committed
+assets-src/higgsfield/*
+!assets-src/higgsfield/.gitkeep
+
+# planning notes and AI prompt packs stay on this machine
+docs/
