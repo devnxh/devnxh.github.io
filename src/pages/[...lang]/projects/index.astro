@@ -53,7 +53,7 @@ const rest = projects.filter((project) => project !== featured);
       <ol class="rows">
         {rest.map((project, index) => <ProjectRow project={project} index={index + 1} />)}
       </ol>
-      <span class="byte-row" aria-hidden="true">4D 5A 90 00 03 00 00 00 04 00 00 00 FF FF 00 00&nbsp;&nbsp;MZ..............</span>
+      <span class="byte-row" aria-hidden="true"></span>
       <p class="mono"><a href={site.links.github}>{t('projects.more')}</a></p>
     </Section>
   </div>

@@ -129,7 +129,8 @@ export function rehypeObsidian() {
           {
             type: 'element',
             tagName: 'a',
-            properties: { className: ['heading-anchor'], href: `#${entry.id}`, ariaLabel: `Permalink: ${entry.text}` },
+            // Kept out of the search index, or every excerpt would carry a stray "#".
+            properties: { className: ['heading-anchor'], href: `#${entry.id}`, ariaLabel: `Permalink: ${entry.text}`, dataPagefindIgnore: '' },
             children: [{ type: 'text', value: '#' }],
           },
         ];

@@ -13,7 +13,7 @@ const visible = entries.filter((entry) => entry.depth <= 3);
 
 {
   visible.length > 1 && (
-    <details class="toc">
+    <details class="toc" data-pagefind-ignore>
       <summary><span class="label">{t('writeup.contents')}</span></summary>
       <nav aria-label={t('writeup.contents')}>
         <ol>

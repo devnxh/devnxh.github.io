@@ -153,6 +153,16 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* Offsets and byte rows are drawn as generated content: they are decoration, not text. */
+  .offset::before {
+    content: attr(data-offset);
+    content: attr(data-offset) / '';
+  }
+  .byte-row::before {
+    content: '4D 5A 90 00 03 00 00 00 04 00 00 00 FF FF 00 00  MZ..............';
+    content: '4D 5A 90 00 03 00 00 00 04 00 00 00 FF FF 00 00  MZ..............' / '';
+    white-space: pre;
+  }
   .byte-row {
     display: block;
     overflow: hidden;
@@ -1057,6 +1067,9 @@
     font-size: 1.25rem;
     caret-color: var(--accent);
     outline: none;
+  }
+  .search-field input::-webkit-search-cancel-button {
+    appearance: none;
   }
   .search-field input::placeholder {
     color: var(--ink-muted);

@@ -19,7 +19,6 @@ const strings = JSON.parse(dialog.dataset.strings ?? '{}') as Record<string, str
 let pagefind: Pagefind | undefined;
 let unavailable = false;
 let selected = -1;
-let lastFocused: Element | null = null;
 
 async function load(): Promise<void> {
   if (pagefind || unavailable) return;
@@ -131,15 +130,8 @@ dialog.addEventListener('click', (event) => {
   if (event.target === dialog) dialog.close();
 });
 
-dialog.addEventListener('close', () => {
-  if (lastFocused instanceof HTMLElement) lastFocused.focus();
-});
-
-export function open(): void {
-  if (dialog.open) return;
-  lastFocused = document.activeElement;
-  dialog.showModal();
-  input.focus();
-  input.select();
+/** Called each time the dialog opens. Picks up anything typed while this module was loading. */
+export function start(): void {
   void load();
+  if (input.value.trim()) void search();
 }

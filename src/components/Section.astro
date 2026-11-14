@@ -15,6 +15,6 @@ const { index, id, class: className } = Astro.props;
 ---
 
 <section class:list={['section', 'grid', className]} id={id}>
-  <div class="margin"><span class="offset" aria-hidden="true">{hexOffset(index)}</span></div>
+  <div class="margin"><span class="offset" aria-hidden="true" data-offset={hexOffset(index)}></span></div>
   <div class="body"><slot /></div>
 </section>

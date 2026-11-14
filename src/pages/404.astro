@@ -13,11 +13,11 @@ const t = useTranslations(lang);
 <Base lang={lang} title={t('404.title')} translated={false} noindex ogKey="index">
   <div class="notebook">
     <section class="section grid not-found">
-      <div class="margin"><span class="offset" aria-hidden="true">0x0404</span></div>
+      <div class="margin"><span class="offset" aria-hidden="true" data-offset="0x0404"></span></div>
       <div class="body">
         <h1>{t('404.title')}</h1>
         <p>{t('404.text')}</p>
-        <span class="byte-row" aria-hidden="true">4D 5A 90 00 03 00 00 00 04 00 00 00 FF FF 00 00&nbsp;&nbsp;MZ..............</span>
+        <span class="byte-row" aria-hidden="true"></span>
         <p class="js-only" style="margin-top: 0">
           <button class="search-button" type="button" data-search-open aria-haspopup="dialog">
             <span>{t('search.open')}</span>

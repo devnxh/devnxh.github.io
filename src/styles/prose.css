@@ -7,7 +7,15 @@
     position: relative;
     font-size: var(--text-prose);
     line-height: 1.6;
+    /* About 68 characters of Newsreader per line. `ch` measures the digit 0, which is far wider than the average letter. */
+    --measure: 30em;
+  }
+  .prose > * {
     max-width: var(--measure);
+  }
+  /* Code, tables, figures and diagrams may use the full column. */
+  .prose > :is(.expressive-code, .table-scroll, figure, .mermaid-figure, hr, .embed) {
+    max-width: none;
   }
   .prose > * + * {
     margin-top: var(--s-6);
@@ -35,6 +43,7 @@
   }
   .prose h2[data-offset]::before {
     /* The second value is empty alt text: the offset is decoration. */
+    content: attr(data-offset);
     content: attr(data-offset) / '';
     display: block;
     margin-bottom: var(--s-1);
@@ -170,6 +179,7 @@
     user-select: none;
   }
   .prose hr::before {
+    content: '4D 5A 90 00 03 00 00 00 04 00 00 00 FF FF 00 00  MZ..............';
     content: '4D 5A 90 00 03 00 00 00 04 00 00 00 FF FF 00 00  MZ..............' / '';
     white-space: pre;
   }
@@ -467,7 +477,7 @@
 
 @layer print {
   @media print {
-    .prose {
+    .prose > * {
       max-width: none;
     }
     .sidenote {

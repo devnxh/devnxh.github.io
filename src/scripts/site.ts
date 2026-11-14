@@ -80,10 +80,25 @@ if (menu) {
 
 // --- Search: `/`, Ctrl+K, Cmd+K or the header button -------------------------
 
+// The dialog opens and takes focus at once, so nothing typed straight after
+// the shortcut is lost. The search code and index load in the background.
+const searchDialog = document.getElementById('search') as HTMLDialogElement | null;
+const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+let searchOpener: Element | null = null;
+
 async function openSearch(): Promise<void> {
-  const { open } = await import('./search');
-  open();
+  if (!searchDialog || !searchInput || searchDialog.open) return;
+  searchOpener = document.activeElement;
+  searchDialog.showModal();
+  searchInput.focus();
+  searchInput.select();
+  const { start } = await import('./search');
+  start();
 }
+
+searchDialog?.addEventListener('close', () => {
+  if (searchOpener instanceof HTMLElement) searchOpener.focus();
+});
 
 for (const button of document.querySelectorAll<HTMLButtonElement>('[data-search-open]')) {
   button.addEventListener('click', () => void openSearch());

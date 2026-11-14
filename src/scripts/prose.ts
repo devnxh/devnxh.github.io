@@ -141,6 +141,22 @@ if (previewLinks.length > 0) {
 
 // --- Mermaid: loaded only when the page has a diagram -----------------------------
 
-if (document.querySelector('[data-mermaid]')) {
-  void import('./mermaid').then(({ renderDiagrams }) => renderDiagrams());
+const diagrams = [...document.querySelectorAll<HTMLElement>('[data-mermaid]')];
+if (diagrams.length > 0) {
+  const loadMermaid = (): void => void import('./mermaid').then(({ renderDiagrams }) => renderDiagrams());
+  if ('IntersectionObserver' in window) {
+    // Mermaid is large. It is fetched when a diagram is about to scroll into view,
+    // so it never competes with the first render of the page.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        loadMermaid();
+      },
+      { rootMargin: '400px 0px' },
+    );
+    for (const diagram of diagrams) observer.observe(diagram.parentElement ?? diagram);
+  } else {
+    loadMermaid();
+  }
 }
