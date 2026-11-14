@@ -1,0 +1,25 @@
+---
+/**
+ * The note shown on German pages whose text is machine translated, or whose
+ * text exists in English only.
+ */
+import { switchLang, useTranslations, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  fallback: boolean;
+  machine: boolean;
+}
+const { lang, fallback, machine } = Astro.props;
+const t = useTranslations(lang);
+const original = switchLang(Astro.url.pathname, 'en');
+---
+
+{fallback && <p class="notice">{t('translation.fallback')}</p>}
+{
+  machine && !fallback && (
+    <p class="notice">
+      {t('translation.machine')} · <a href={original} hreflang="en">{t('translation.original')}</a>
+    </p>
+  )
+}

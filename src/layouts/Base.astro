@@ -1,0 +1,124 @@
+---
+/**
+ * The page shell: metadata, fonts, theme script, header, footer, search dialog.
+ */
+import newsreaderUrl from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url';
+import plexMonoUrl from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
+import katexCssUrl from 'katex/dist/katex.min.css?url';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import SearchDialog from '../components/SearchDialog.astro';
+import { LANGS, localise, switchLang, useTranslations, type Lang } from '../i18n';
+import { site } from '../site.config';
+import '../styles/tokens.css';
+import '../styles/layout.css';
+import '../styles/prose.css';
+
+interface Props {
+  lang: Lang;
+  /** Page title without the site name. Omit on Home. */
+  title?: string;
+  description?: string;
+  /** Which header link is current. */
+  section?: 'projects' | 'writeups' | 'about';
+  type?: 'website' | 'article';
+  /** Key of the Open Graph image, for example `writeups/blue`. Defaults to the page path. */
+  ogKey?: string;
+  /** Overrides the canonical URL (German pages that show English text point at the English page). */
+  canonical?: string;
+  /** One or more schema.org objects. */
+  jsonLd?: object | object[];
+  /** Loads the KaTeX stylesheet. Set only on pages whose content has maths. */
+  hasMath?: boolean;
+  /** False for pages that exist in one language only (404). */
+  translated?: boolean;
+  noindex?: boolean;
+}
+
+const {
+  lang,
+  title,
+  description = site.description[lang],
+  section,
+  type = 'website',
+  ogKey,
+  canonical,
+  jsonLd,
+  hasMath = false,
+  translated = true,
+  noindex = false,
+} = Astro.props;
+
+const t = useTranslations(lang);
+const pathname = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ${lang === 'de' ? 'Security Analyst, Portfolio und Write-ups' : 'Security analyst, portfolio and write-ups'}`;
+const canonicalUrl = new URL(canonical ?? pathname, site.url).href;
+const imageKey = ogKey ?? (pathname.replace(/^\/|\/$/g, '') || 'index');
+const ogImage = new URL(`/og/${imageKey}.png`, site.url).href;
+const schemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex" />}
+    {
+      translated &&
+        LANGS.map((code) => <link rel="alternate" hreflang={code} href={new URL(switchLang(pathname, code), site.url).href} />)
+    }
+    {translated && <link rel="alternate" hreflang="x-default" href={new URL(switchLang(pathname, 'en'), site.url).href} />}
+    <link rel="alternate" type="application/rss+xml" title={t('rss.title')} href={localise('/rss.xml', lang)} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title ?? site.name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : 'en_GB'} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#F3EFE6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#151410" media="(prefers-color-scheme: dark)" />
+
+    <link rel="preload" href={newsreaderUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={plexMonoUrl} as="font" type="font/woff2" crossorigin />
+    {hasMath && <link rel="stylesheet" href={katexCssUrl} />}
+
+    {/* Runs before first paint so a saved theme never flashes. */}
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        root.classList.add('js');
+        try {
+          var saved = localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark') root.dataset.theme = saved;
+        } catch (error) {}
+      })();
+    </script>
+
+    {schemas.map((schema) => <script type="application/ld+json" set:html={JSON.stringify(schema)} />)}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t('skip')}</a>
+    <Header lang={lang} section={section} pathname={pathname} translated={translated} />
+    <main id="main" class="wrap" data-pagefind-body={noindex ? undefined : ''}>
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <SearchDialog lang={lang} />
+    <script>
+      import '../scripts/site';
+    </script>
+  </body>
+</html>

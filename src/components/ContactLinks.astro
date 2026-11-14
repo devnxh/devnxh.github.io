@@ -1,0 +1,18 @@
+---
+import { useTranslations, type Lang } from '../i18n';
+import { site } from '../site.config';
+import Email from './Email.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<ul class="text-links">
+  <li><a href={site.links.github} rel="me">GitHub</a></li>
+  <li><a href={site.links.linkedin} rel="me">LinkedIn</a></li>
+  <li><a href={site.links.tryhackme} rel="me">TryHackMe</a></li>
+  <li><Email label={t('email')} /></li>
+</ul>

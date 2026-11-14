@@ -1,0 +1,29 @@
+---
+/**
+ * Wrapper for a rendered note. Marks the language of the text (a German page
+ * can show English text) and carries the strings the note scripts need.
+ */
+import { localise, useTranslations, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  /** Language of the Markdown, when it differs from the page. */
+  contentLang?: Lang;
+}
+const { lang, contentLang = lang } = Astro.props;
+const t = useTranslations(lang);
+const strings = { zoom: t('image.zoom'), wrap: t('code.wrap') };
+---
+
+<div class="prose" lang={contentLang !== lang ? contentLang : undefined} data-strings={JSON.stringify(strings)} data-link-index={localise('/link-index.json', lang)}>
+  <slot />
+</div>
+
+<dialog class="zoom" id="zoom" aria-label={t('image.zoom')}>
+  <form method="dialog"><button type="submit">{t('image.close')}</button></form>
+  <img alt="" />
+</dialog>
+
+<script>
+  import '../scripts/prose';
+</script>

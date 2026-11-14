@@ -1,0 +1,26 @@
+---
+import { formatDate, isoDate, localise, useTranslations, type Lang } from '../i18n';
+import { site } from '../site.config';
+import ContactLinks from './ContactLinks.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const built = new Date();
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <p>
+        {t('footer.built')} · <a href={site.repo}>{t('footer.source')}</a> · <a href={localise('/rss.xml', lang)}>{t('footer.rss')}</a>
+      </p>
+      <p>{t('footer.lastBuild')} <time datetime={isoDate(built)}>{formatDate(built, lang, 'short')}</time> · {t('footer.colophon')}</p>
+    </div>
+    <nav aria-label={t('footer.contact')}>
+      <ContactLinks lang={lang} />
+    </nav>
+  </div>
+</footer>

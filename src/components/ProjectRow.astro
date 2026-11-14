@@ -1,0 +1,39 @@
+---
+import type { ProjectView } from '../lib/content';
+import { hexOffset } from '../lib/obsidian/rehype';
+
+interface Props {
+  project: ProjectView;
+  /** Position in the list, for the hex offset. */
+  index: number;
+  /** `compact` is the five-column row used on Home. */
+  variant?: 'full' | 'compact';
+}
+const { project, index, variant = 'full' } = Astro.props;
+const stack = project.stack.slice(0, variant === 'compact' ? 3 : 6).join(', ');
+---
+
+{
+  variant === 'compact' ? (
+    <li class="row row--compact">
+      <span class="offset" aria-hidden="true">{hexOffset(index)}</span>
+      <span class="row-title"><a href={project.url}>{project.title}</a></span>
+      <span class="row-text">{project.summary}</span>
+      <span class="row-meta num">{project.year ?? ''}</span>
+      <span class="row-meta">{stack}</span>
+    </li>
+  ) : (
+    <li class="row row--project">
+      <span class="offset" aria-hidden="true">{hexOffset(index)}</span>
+      <div>
+        <h2 class="row-title"><a href={project.url}>{project.title}</a></h2>
+        <p class="row-text">{project.summary}</p>
+      </div>
+      <p class="row-meta">
+        {project.period && <span class="num">{project.period}</span>}
+        {project.role && <span>{project.role}</span>}
+        <span>{stack}</span>
+      </p>
+    </li>
+  )
+}

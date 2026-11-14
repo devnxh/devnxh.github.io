@@ -1,0 +1,43 @@
+---
+/**
+ * The search dialog shell. The search code and the Pagefind index are loaded
+ * the first time the dialog opens, not with the page.
+ */
+import { useTranslations, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const strings = {
+  one: t('search.results.one'),
+  many: t('search.results.many'),
+  none: t('search.results.none'),
+  unavailable: t('search.unavailable'),
+  project: t('search.type.project'),
+  page: t('search.type.page'),
+};
+---
+
+<dialog class="search" id="search" aria-label={t('search.label')} data-strings={JSON.stringify(strings)} data-pagefind-ignore>
+  <form class="search-field" method="dialog" role="search">
+    <input
+      type="search"
+      id="search-input"
+      autocomplete="off"
+      spellcheck="false"
+      enterkeyhint="search"
+      placeholder={t('search.placeholder')}
+      aria-label={t('search.label')}
+      role="combobox"
+      aria-expanded="false"
+      aria-controls="search-results"
+      aria-autocomplete="list"
+    />
+    <button type="submit" aria-label={t('search.close')}><kbd>esc</kbd></button>
+  </form>
+  <p class="search-status" id="search-status" role="status" aria-live="polite"></p>
+  <ul class="search-results" id="search-results" role="listbox" aria-label={t('search.label')}></ul>
+  <p class="search-hint" aria-hidden="true">{t('search.hint')}</p>
+</dialog>

@@ -1,0 +1,20 @@
+---
+/**
+ * The address never appears whole in the HTML. Without JavaScript the reader
+ * sees "name [at] domain [dot] tld"; with it, the text becomes a mailto link.
+ * The data attributes hold the two halves reversed.
+ */
+import { site } from '../site.config';
+
+interface Props {
+  /** Link text once JavaScript has built the link. Defaults to the address itself. */
+  label?: string;
+}
+const { label } = Astro.props;
+const reverse = (value: string) => [...value].reverse().join('');
+const { user, domain } = site.email;
+---
+
+<span class="email" data-u={reverse(user)} data-d={reverse(domain)} data-label={label}>
+  {user} [at] {domain.replaceAll('.', ' [dot] ')}
+</span>

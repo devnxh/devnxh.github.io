@@ -1,0 +1,20 @@
+---
+/**
+ * One ruled section of a notebook page: a hex offset in the margin column and
+ * the content beside it. The offset is decoration and hidden from screen readers.
+ */
+import { hexOffset } from '../lib/obsidian/rehype';
+
+interface Props {
+  /** Position of the section on the page, starting at 0. */
+  index: number;
+  id?: string;
+  class?: string;
+}
+const { index, id, class: className } = Astro.props;
+---
+
+<section class:list={['section', 'grid', className]} id={id}>
+  <div class="margin"><span class="offset" aria-hidden="true">{hexOffset(index)}</span></div>
+  <div class="body"><slot /></div>
+</section>

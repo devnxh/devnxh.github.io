@@ -1,0 +1,54 @@
+---
+/**
+ * A project or write-up cover with its evidence caption.
+ * With no photograph, it draws a hex-dump placeholder in the site's own style,
+ * so the site is complete without any generated images.
+ */
+import { Image } from 'astro:assets';
+import { loadImage } from '../lib/images';
+import type { Attachment } from '../lib/obsidian/vault';
+
+interface Props {
+  title: string;
+  /** Caption text, for example `EXHIBIT A · PE-Sentinel`. */
+  caption?: string;
+  cover?: Attachment;
+  /** Above-the-fold covers load eagerly. */
+  priority?: boolean;
+}
+const { title, caption, cover, priority = false } = Astro.props;
+const photo = await loadImage(cover);
+
+// Placeholder: the first row is the DOS header that opens every Windows
+// executable; the rest are the bytes of the title, as a hex editor would show them.
+const header = [0x4d, 0x5a, 0x90, 0x00, 0x03, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00];
+const titleBytes = [...new TextEncoder().encode(`${title} `)];
+const rows = Array.from({ length: 11 }, (_unused, row) => {
+  const bytes = row === 0 ? header : Array.from({ length: 16 }, (_byte, column) => titleBytes[((row - 1) * 16 + column) % titleBytes.length] ?? 0);
+  const hex = bytes.map((byte) => byte.toString(16).toUpperCase().padStart(2, '0')).join(' ');
+  const ascii = bytes.map((byte) => (byte >= 0x20 && byte < 0x7f ? String.fromCharCode(byte) : '.')).join('');
+  return `${(row * 16).toString(16).toUpperCase().padStart(8, '0')}  ${hex}  ${ascii}`;
+});
+---
+
+<figure class="cover">
+  {
+    photo ? (
+      <span class="cover-frame cover-frame--photo">
+        <Image src={photo} alt="" widths={[480, 800, 1200]} sizes="(min-width: 64rem) 40rem, 100vw" loading={priority ? 'eager' : 'lazy'} />
+      </span>
+    ) : (
+      <span class="cover-frame">
+        <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+          <g font-size="11.5" fill="var(--ink-faint)" style="white-space:pre" xml:space="preserve">
+            {/* textLength pins every row to the same width whatever the fallback font is. */}
+            {rows.map((line, index) => <text x="32" y={56 + index * 22} textLength="536" lengthAdjust="spacingAndGlyphs">{line}</text>)}
+          </g>
+          <text x="32" y="352" font-size="26" fill="var(--ink-muted)">{title}</text>
+          <line x1="32" y1="364" x2="120" y2="364" stroke="var(--accent)" stroke-width="2" />
+        </svg>
+      </span>
+    )
+  }
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

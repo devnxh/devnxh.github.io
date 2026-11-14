@@ -1,0 +1,25 @@
+---
+import { useTranslations, type Lang } from '../i18n';
+import type { TocEntry } from '../lib/obsidian/rehype';
+
+interface Props {
+  entries: TocEntry[];
+  lang: Lang;
+}
+const { entries, lang } = Astro.props;
+const t = useTranslations(lang);
+const visible = entries.filter((entry) => entry.depth <= 3);
+---
+
+{
+  visible.length > 1 && (
+    <details class="toc">
+      <summary><span class="label">{t('writeup.contents')}</span></summary>
+      <nav aria-label={t('writeup.contents')}>
+        <ol>
+          {visible.map((entry) => <li data-depth={entry.depth}><a href={`#${entry.id}`}>{entry.text}</a></li>)}
+        </ol>
+      </nav>
+    </details>
+  )
+}

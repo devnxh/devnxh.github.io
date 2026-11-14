@@ -1,0 +1,24 @@
+---
+import { isoDate, useTranslations, type Lang } from '../i18n';
+import type { WriteupView } from '../lib/content';
+
+interface Props {
+  writeup: WriteupView;
+  lang: Lang;
+}
+const { writeup, lang } = Astro.props;
+const t = useTranslations(lang);
+const stamp = writeup.hidden ? 'draft' : writeup.status;
+---
+
+<li class="row row--writeup" data-writeup data-category={writeup.category} data-difficulty={writeup.difficulty ?? ''} data-tags={writeup.tags.join(' ')}>
+  <span class="row-meta num">{writeup.caseId}</span>
+  <time class="row-meta" datetime={isoDate(writeup.date)}>{isoDate(writeup.date)}</time>
+  <span class="row-title"><a href={writeup.url}>{writeup.title}</a></span>
+  <span class="row-meta">
+    {t(`category.${writeup.category}`)}
+    {writeup.difficulty && <><span class="sep" aria-hidden="true">·</span>{t(`difficulty.${writeup.difficulty}`)}</>}
+    <span class="sep" aria-hidden="true">·</span>{t('writeup.minutesShort', { n: writeup.minutes })}
+  </span>
+  {stamp ? <span class="stamp">{t(`stamp.${stamp}`)}</span> : <span />}
+</li>

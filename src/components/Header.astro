@@ -1,0 +1,82 @@
+---
+import { LANGS, localise, switchLang, useTranslations, type Lang } from '../i18n';
+import { site } from '../site.config';
+
+interface Props {
+  lang: Lang;
+  section?: 'projects' | 'writeups' | 'about';
+  pathname: string;
+  translated: boolean;
+}
+
+const { lang, section, pathname, translated } = Astro.props;
+const t = useTranslations(lang);
+
+const links = [
+  { key: 'projects', href: localise('/projects/', lang), label: t('nav.projects') },
+  { key: 'writeups', href: localise('/writeups/', lang), label: t('nav.writeups') },
+  { key: 'about', href: localise('/about/', lang), label: t('nav.about') },
+] as const;
+const themes = ['light', 'dark', 'system'] as const;
+---
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href={localise('/', lang)}>{site.name}</a>
+
+    <nav class="nav-desktop" aria-label={t('nav.label')}>
+      <ul class="nav-links">
+        {links.map((link) => <li><a href={link.href} aria-current={section === link.key ? 'page' : undefined}>{link.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <button class="search-button js-only" type="button" data-search-open aria-haspopup="dialog" aria-keyshortcuts="/ Control+K Meta+K">
+      <span>{t('search.open')}</span>
+      <kbd aria-hidden="true">/</kbd>
+    </button>
+
+    <div class="header-tools tools-desktop">
+      <ul class="lang-switch" aria-label={t('lang.label')}>
+        {
+          LANGS.map((code) => (
+            <li>
+              <a href={translated ? switchLang(pathname, code) : localise('/', code)} hreflang={code} lang={code} aria-current={code === lang ? 'true' : undefined} data-lang-switch={code}>
+                <abbr title={t(`lang.${code}`)} style="text-decoration:none">{code.toUpperCase()}</abbr>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <ul class="theme-toggle js-only" aria-label={t('theme.label')}>
+        {themes.map((theme) => <li><button type="button" data-theme-set={theme} aria-pressed="false">{t(`theme.${theme}`)}</button></li>)}
+      </ul>
+    </div>
+
+    <details class="menu">
+      <summary>{t('nav.menu')}</summary>
+      <div class="menu-panel">
+        <nav aria-label={t('nav.label')}>
+          <ul class="nav-links">
+            {links.map((link) => <li><a href={link.href} aria-current={section === link.key ? 'page' : undefined}>{link.label}</a></li>)}
+          </ul>
+        </nav>
+        <div class="header-tools">
+          <ul class="lang-switch" aria-label={t('lang.label')}>
+            {
+              LANGS.map((code) => (
+                <li>
+                  <a href={translated ? switchLang(pathname, code) : localise('/', code)} hreflang={code} lang={code} aria-current={code === lang ? 'true' : undefined} data-lang-switch={code}>
+                    {t(`lang.${code}`)}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <ul class="theme-toggle js-only" aria-label={t('theme.label')}>
+            {themes.map((theme) => <li><button type="button" data-theme-set={theme} aria-pressed="false">{t(`theme.${theme}`)}</button></li>)}
+          </ul>
+        </div>
+      </div>
+    </details>
+  </div>
+</header>

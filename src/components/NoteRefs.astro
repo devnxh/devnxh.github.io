@@ -1,0 +1,29 @@
+---
+/** A ruled list of links to other notes: backlinks, related write-ups. */
+import { useTranslations, type Lang } from '../i18n';
+import type { NoteRef } from '../lib/content';
+
+interface Props {
+  heading: string;
+  refs: NoteRef[];
+  lang: Lang;
+}
+const { heading, refs, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+{
+  refs.length > 0 && (
+    <section>
+      <h2>{heading}</h2>
+      <ul class="rows">
+        {refs.map((ref) => (
+          <li class="row row--ref">
+            <span class="row-meta">{ref.caseId ?? t(`type.${ref.collection}`)}</span>
+            <span class="row-title"><a href={ref.url}>{ref.title}</a></span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
