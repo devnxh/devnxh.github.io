@@ -132,7 +132,8 @@ function toCallout(quote: Node, context: Context): void {
     quote.data = { hName: 'details', hProperties: { class: 'redaction' } };
     quote.children = [
       element('summary', { class: 'redaction-bar' }, [element('span', { class: 'redaction-label' }, label)]),
-      element('div', { class: 'redaction-body' }, body),
+      // A redaction bar hides a flag or secret, so its contents are kept out of the search index.
+      element('div', { class: 'redaction-body', dataPagefindIgnore: '' }, body),
     ];
     return;
   }
