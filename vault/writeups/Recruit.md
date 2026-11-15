@@ -73,7 +73,7 @@ The endpoint happily returned the raw PHP config, including the HR password:
 ![[recruit-04-config-lfi.png|file.php returns config.php, revealing the HR password]]
 
 > [!flag] HR password recovered
-> hrpassword123
+
 
 ## 4. HR access and the first flag
 
@@ -151,7 +151,7 @@ Among the columns were `username` and `password` — the two I needed.
 ![[recruit-11-sqli-credentials.png|The admin username and password from the users table]]
 
 > [!flag] Admin credentials
-> admin:admin@001admin
+
 
 ## 6. Final flag
 
