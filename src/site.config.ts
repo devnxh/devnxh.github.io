@@ -40,11 +40,11 @@ export const site = {
   photoPath: '/me.jpg',
 
   positioning: {
-    en: 'I take Windows executables apart without running them, then write the tools that explain what I found.',
-    de: 'Ich zerlege Windows-Programme, ohne sie auszuführen, und schreibe die Werkzeuge, die erklären, was ich gefunden habe.',
+    en: 'I read a binary the way an analyst reads evidence: headers, imports, strings, then a verdict with reasons.',
+    de: 'Ich lese eine Binärdatei, wie ein Analyst Beweise liest: Header, Importe, Zeichenketten, dann ein Urteil mit Begründung.',
   } satisfies Localised,
   /** The words in the positioning line that get the hand-drawn underline. */
-  positioningEmphasis: { en: 'without running them', de: 'ohne sie auszuführen' } satisfies Localised,
+  positioningEmphasis: { en: 'a verdict with reasons', de: 'ein Urteil mit Begründung' } satisfies Localised,
 
   status: {
     en: 'Open to Security Analyst / SOC L1 roles · India or remote · available now',

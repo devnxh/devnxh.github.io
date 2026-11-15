@@ -1,6 +1,6 @@
 ---
 title: About
-description: "Devansh Vadher: B.E. in Information Technology (2026), focused on cybersecurity. Looking for entry-level Security Analyst and SOC L1 roles."
+description: "Devansh Vadher: B.E. in Information Technology (2026), focused on cybersecurity. Python security tools, static malware analysis and reverse engineering."
 ---
 
 ## Bio
@@ -8,10 +8,6 @@ description: "Devansh Vadher: B.E. in Information Technology (2026), focused on 
 I hold a B.E. in Information Technology (2026) with a focus on cybersecurity. I build Python security tools, practise static malware analysis and reverse engineering, and work comfortably with Linux and networking. I also have hands-on QA and testing experience.
 
 The clearest example is [[PE-Sentinel]], a command-line tool that triages Windows executables without running them.
-
-## What I am looking for
-
-Entry-level Security Analyst, SOC Analyst L1 or Information Security Analyst roles, in India (on-site or hybrid) or remote. I am available immediately. System administration and QA testing roles are a good second fit.
 
 ## Experience
 

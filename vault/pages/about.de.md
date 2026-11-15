@@ -1,7 +1,7 @@
 ---
 title: Über mich
 translation: machine
-description: "Devansh Vadher: B.E. in Informationstechnik (2026) mit Schwerpunkt Cybersicherheit. Ich suche eine Einstiegsstelle als Security Analyst oder SOC Analyst L1."
+description: "Devansh Vadher: B.E. in Informationstechnik (2026) mit Schwerpunkt Cybersicherheit. Sicherheitswerkzeuge in Python, statische Malware-Analyse und Reverse Engineering."
 ---
 
 ## Kurzprofil
@@ -9,10 +9,6 @@ description: "Devansh Vadher: B.E. in Informationstechnik (2026) mit Schwerpunkt
 Ich habe einen B.E. in Informationstechnik (2026) mit Schwerpunkt Cybersicherheit. Ich entwickle Sicherheitswerkzeuge in Python, übe statische Malware-Analyse und Reverse Engineering und arbeite sicher mit Linux und Netzwerken. Dazu kommt praktische Erfahrung in Qualitätssicherung und Softwaretests.
 
 Das deutlichste Beispiel ist [[PE-Sentinel]], ein Kommandozeilenwerkzeug, das Windows-Programme einschätzt, ohne sie auszuführen.
-
-## Was ich suche
-
-Eine Einstiegsstelle als Security Analyst, SOC Analyst L1 oder Information Security Analyst, in Indien (vor Ort oder hybrid) oder remote. Ich bin ab sofort verfügbar. Auch Stellen in der Systemadministration und im Softwaretest passen gut.
 
 ## Berufserfahrung
 
