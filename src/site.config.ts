@@ -40,11 +40,11 @@ export const site = {
   photoPath: '/me.jpg',
 
   positioning: {
-    en: 'I read a binary the way an analyst reads evidence: headers, imports, strings, then a verdict with reasons.',
-    de: 'Ich lese eine Binärdatei, wie ein Analyst Beweise liest: Header, Importe, Zeichenketten, dann ein Urteil mit Begründung.',
+    en: 'I test systems the way an attacker would and take binaries apart to see what they do, then write up exactly what I found.',
+    de: 'Ich prüfe Systeme so, wie ein Angreifer es täte, zerlege Binärdateien, um zu sehen, was sie tun, und halte genau fest, was ich gefunden habe.',
   } satisfies Localised,
   /** The words in the positioning line that get the hand-drawn underline. */
-  positioningEmphasis: { en: 'a verdict with reasons', de: 'ein Urteil mit Begründung' } satisfies Localised,
+  positioningEmphasis: { en: 'exactly what I found', de: 'was ich gefunden habe' } satisfies Localised,
 
   status: {
     en: 'Open to Security Analyst / SOC L1 roles · India or remote · available now',
@@ -52,8 +52,8 @@ export const site = {
   } satisfies Localised,
 
   description: {
-    en: 'Devansh Vadher, entry-level security analyst. Python security tools, static malware analysis, reverse engineering, and write-ups.',
-    de: 'Devansh Vadher, Security Analyst am Berufsanfang. Python-Sicherheitswerkzeuge, statische Malware-Analyse, Reverse Engineering und Write-ups.',
+    en: 'Devansh Vadher, entry-level security analyst. Penetration testing, static malware analysis, reverse engineering, Python security tools, and write-ups.',
+    de: 'Devansh Vadher, Security Analyst am Berufsanfang. Penetrationstests, statische Malware-Analyse, Reverse Engineering, Python-Sicherheitswerkzeuge und Write-ups.',
   } satisfies Localised,
 
   targetRoles: ['Security Analyst', 'SOC Analyst L1', 'Information Security Analyst'],
