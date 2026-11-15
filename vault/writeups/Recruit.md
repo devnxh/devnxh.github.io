@@ -3,6 +3,8 @@ title: "Recruit"
 date: 2026-11-15
 description: "A recruitment portal taken from recon to admin: a URL-fetch endpoint that reads local files, then union-based SQL injection in the candidate search."
 category: ctf
+platform: TryHackMe
+difficulty: medium
 status: solved
 tools: [nmap, gobuster]
 tags: [web, lfi, sql-injection, union-based, enumeration]
