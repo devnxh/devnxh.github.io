@@ -18,6 +18,13 @@ This was my final-year industry internship. I worked in a team on the [[Speech T
 - I wrote and ran 15 functional and integration test cases. On the first run 12 of 15 passed. The 3 defects found included a timezone bug that broke daily streaks for users practising after 5:30 PM IST, and a chart crash with fewer than 2 sessions.
 - I re-tested after the fixes until all 15 passed, including negative and boundary cases such as a wrong password, an unsupported file type and the 70% score needed to reach the next level.
 
+**AI Development Intern, Infosys Springboard** (November 2024 to January 2025)
+
+I completed Infosys Springboard Internship 5.0 (B3), exploring AI application development with Python and LangChain. I worked on conversational AI, Retrieval-Augmented Generation (RAG), vector embeddings, semantic search, and the integration of Google Gemini and Hugging Face models.
+
+- My [LangChain projects](https://github.com/devnxh/Langchain-projects) cover the pieces above: document ingestion and retrieval for RAG, a conversational agent, summarisation with memory, and text, speech and translation scripts.
+- My [Speech-to-Speech Streaming](https://github.com/devnxh/Speech-to-Speech-Streaming) app takes a video, transcribes the speech, translates it and dubs the translated audio back over the video.
+
 ## Education
 
 **B.E. Information Technology**, Government Engineering College (GEC) Bhavnagar, Gujarat Technological University. September 2023 to May 2026, CGPA 8.20/10. I joined through lateral entry into the second year after my diploma.
