@@ -11,6 +11,8 @@ export interface Skill {
   de?: string;
   /** Slug of the project that shows this skill in use. */
   project?: string;
+  /** Or the slug of a write-up that does. */
+  writeup?: string;
 }
 
 export const site = {
@@ -103,8 +105,8 @@ export const site = {
         { label: 'network and web security', de: 'Netzwerk- und Web-Sicherheit' },
         { label: 'static malware analysis', de: 'statische Malware-Analyse', project: 'pe-sentinel' },
         { label: 'YARA', project: 'pe-sentinel' },
-        { label: 'reverse engineering', de: 'Reverse Engineering', project: 'reverse-engineering-practice' },
-        { label: 'GDB', project: 'reverse-engineering-practice' },
+        { label: 'reverse engineering', de: 'Reverse Engineering', writeup: 'crackme-2' },
+        { label: 'GDB', writeup: 'crackme-1' },
         { label: 'Wireshark' },
         { label: 'SIEM basics', de: 'SIEM-Grundlagen' },
         { label: 'IDS' },
@@ -130,7 +132,7 @@ export const site = {
         { label: 'SQL' },
         { label: 'C' },
         { label: 'Java' },
-        { label: 'x86-64 assembly', de: 'x86-64-Assembler', project: 'reverse-engineering-practice' },
+        { label: 'x86-64 assembly', de: 'x86-64-Assembler', writeup: 'crackme-2' },
       ],
     },
     {

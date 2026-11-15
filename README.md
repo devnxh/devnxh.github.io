@@ -196,7 +196,7 @@ Facts that appear outside a note (name, links, the status line, the toolbox on H
 The site is in English at `/` and in German at `/de/`.
 
 - **Write-ups:** write in English. To add a German version, create a second file next to it with `.de` before the extension: `Blue.md` and `Blue.de.md`. Without a German file, `/de/writeups/blue/` shows the English text inside the German page, with a note that the post exists in English only.
-- **Projects and About:** the German files (`PE-Sentinel.de.md`, `about.de.md`) carry `translation: machine` in their frontmatter, which shows the note "Maschinell übersetzt · Original auf Englisch". When a native speaker has reviewed a file, delete that line and the note disappears.
+- **Projects and About:** the German files (for example `CineWatch.de.md` and `about.de.md`) carry `translation: machine` in their frontmatter, which shows the note "Maschinell übersetzt · Original auf Englisch". When a native speaker has reviewed a file, delete that line and the note disappears.
 - A German file needs only the properties that differ. Dates, stack, repository and order are taken from the English file.
 - **Interface strings** (menu, labels, buttons) are in [`src/i18n/ui.ts`](src/i18n/ui.ts). `npm run check` fails if a key exists in English and not in German.
 
