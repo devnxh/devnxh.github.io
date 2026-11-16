@@ -2,6 +2,7 @@
 title: "Simple CTF"
 date: 2026-11-14
 category: ctf
+difficulty: easy
 status: solved
 tools: [nmap, gobuster, searchsploit, ssh, vim]
 tags: [linux, web, sql-injection, privilege-escalation]

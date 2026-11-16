@@ -2,6 +2,7 @@
 title: "Crackme 2"
 date: 2026-04-06
 category: reverse-engineering
+difficulty: medium
 status: solved
 tools: [IDA Free]
 tags: [crackme, ida, x86-64]

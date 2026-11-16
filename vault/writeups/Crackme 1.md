@@ -2,6 +2,7 @@
 title: "Crackme 1"
 date: 2026-04-05
 category: reverse-engineering
+difficulty: easy
 status: solved
 tools: [gdb]
 tags: [crackme, gdb, x86-64]
