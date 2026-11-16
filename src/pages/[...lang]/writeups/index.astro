@@ -12,9 +12,7 @@ const t = useTranslations(lang);
 const writeups = await getWriteups(lang);
 
 const years = [...new Set(writeups.map((writeup) => writeup.date.getUTCFullYear()))].sort((a, b) => b - a);
-const categories = [...new Set(writeups.map((writeup) => writeup.category))].sort();
 const difficulties = (['easy', 'medium', 'hard', 'insane'] as const).filter((level) => writeups.some((writeup) => writeup.difficulty === level));
-const tags = [...new Set(writeups.flatMap((writeup) => writeup.tags))].sort();
 ---
 
 <Base lang={lang} title={t('writeups.title')} section="writeups">
@@ -34,34 +32,18 @@ const tags = [...new Set(writeups.flatMap((writeup) => writeup.tags))].sort();
         </Section>
       ) : (
         <>
+          {difficulties.length > 0 && (
           <Section index={0} class="js-only">
             <form class="filters" aria-label={t('writeups.filter')} onsubmit="return false">
               <fieldset class="filter-group">
-                <legend class="label">{t('writeups.filter.category')}</legend>
-                <button type="button" data-filter="category" data-value="" aria-pressed="true">{t('writeups.filter.all')}</button>
-                {categories.map((category) => <button type="button" data-filter="category" data-value={category} aria-pressed="false">{t(`category.${category}`)}</button>)}
+                <legend class="label">{t('writeups.filter.difficulty')}</legend>
+                <button type="button" data-filter="difficulty" data-value="" aria-pressed="true">{t('writeups.filter.all')}</button>
+                {difficulties.map((level) => <button type="button" class="difficulty-filter" data-level={level} data-filter="difficulty" data-value={level} aria-pressed="false">{t(`difficulty.${level}`)}</button>)}
               </fieldset>
-              {
-                difficulties.length > 0 && (
-                  <fieldset class="filter-group">
-                    <legend class="label">{t('writeups.filter.difficulty')}</legend>
-                    <button type="button" data-filter="difficulty" data-value="" aria-pressed="true">{t('writeups.filter.all')}</button>
-                    {difficulties.map((level) => <button type="button" data-filter="difficulty" data-value={level} aria-pressed="false">{t(`difficulty.${level}`)}</button>)}
-                  </fieldset>
-                )
-              }
-              {
-                tags.length > 0 && (
-                  <fieldset class="filter-group">
-                    <legend class="label">{t('writeups.filter.tag')}</legend>
-                    <button type="button" data-filter="tag" data-value="" aria-pressed="true">{t('writeups.filter.all')}</button>
-                    {tags.map((tag) => <button type="button" data-filter="tag" data-value={tag} aria-pressed="false">#{tag}</button>)}
-                  </fieldset>
-                )
-              }
             </form>
             <p class="empty" data-filter-empty hidden>{t('writeups.filter.none')}</p>
           </Section>
+          )}
 
           {years.map((year, index) => (
             <Section index={index + 1}>

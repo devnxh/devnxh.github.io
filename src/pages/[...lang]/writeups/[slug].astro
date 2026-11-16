@@ -71,7 +71,7 @@ const schema = {
       {writeup.updated && <div><dt>{t('writeup.updated')}</dt><dd><time datetime={isoDate(writeup.updated)}>{formatDate(writeup.updated, lang)}</time></dd></div>}
       {writeup.platform && <div><dt>{t('writeup.platform')}</dt><dd>{writeup.platform}</dd></div>}
       <div><dt>{t('writeup.category')}</dt><dd>{t(`category.${writeup.category}`)}</dd></div>
-      {writeup.difficulty && <div><dt>{t('writeup.difficulty')}</dt><dd>{t(`difficulty.${writeup.difficulty}`)}</dd></div>}
+      {writeup.difficulty && <div><dt>{t('writeup.difficulty')}</dt><dd><span class="difficulty" data-level={writeup.difficulty}>{t(`difficulty.${writeup.difficulty}`)}</span></dd></div>}
       {writeup.tools.length > 0 && <div><dt>{t('writeup.tools')}</dt><dd>{writeup.tools.join(', ')}</dd></div>}
       {writeup.status && <div><dt>{t('writeup.status')}</dt><dd>{t(`status.${writeup.status}`)}</dd></div>}
     </dl>
