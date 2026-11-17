@@ -24,6 +24,3 @@ Die Daten stammen aus dem TMDB-Filmdatensatz (v11). Die berechnete TF-IDF-Matrix
 ## Betrieb im kostenlosen Tarif
 
 Die gehostete Demo auf Render lädt eine Stichprobe von 1.000 Filmen statt des vollständigen Datensatzes, damit der Arbeitsspeicher des kostenlosen Tarifs ausreicht.
-
-> [!todo] TODO
-> Devansh: Ergänze, wann du das gebaut hast, ob allein oder im Team, und was du dabei gelernt hast. Im Repository steht es nicht.

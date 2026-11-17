@@ -85,5 +85,4 @@ The feedback model used while the project was built was later retired by its pro
 
 ## What I learned
 
-> [!todo] TODO
-> Devansh: add what this project taught you about testing in a team.
+The bugs that mattered most weren't the obvious ones. A timezone edge case and a silent fallback on a failed API call both passed unnoticed until someone deliberately tested the boundary or read the logs closely — which is why boundary cases and failure paths, not just the happy path, are where real testing earns its keep.

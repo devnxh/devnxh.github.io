@@ -54,6 +54,3 @@ The extracted text is cleaned, translated with Google Translate, and shown next 
 ## Award
 
 VoiceVista won the **Principal's Choice Award at TechXcellence-2025**, held on 4 and 5 April 2025 at Government Engineering College Bhavnagar and organised by B2B and the GDG GECG Bhavnagar Chapter.
-
-> [!todo] TODO
-> Devansh: add your own part in the team and one thing you would build differently now.

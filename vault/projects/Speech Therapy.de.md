@@ -82,5 +82,4 @@ Das Feedback-Modell, mit dem das Projekt entwickelt wurde, wurde später vom Anb
 
 ## Was ich gelernt habe
 
-> [!todo] TODO
-> Devansh: Ergänze, was dir dieses Projekt über das Testen im Team gezeigt hat.
+Die wichtigsten Fehler waren nicht die offensichtlichen. Ein Zeitzonen-Grenzfall und ein stiller Rückfall bei einem fehlgeschlagenen API-Aufruf blieben beide unbemerkt, bis jemand gezielt die Grenzwerte testete oder die Logs genau las – deshalb zahlen sich Grenzwerttests und Fehlerpfade, nicht nur der Normalfall, beim echten Testen aus.

@@ -21,9 +21,6 @@ PE-Sentinel is a Python command-line tool that statically analyses Windows PE fi
 
 A single signal, such as high entropy, means little on its own.
 
-> [!todo] TODO
-> Devansh: add one or two sentences on what made you start this project.
-
 ## What I built
 
 - **File fingerprinting:** SHA-256 and MD5 hashes, plus validation of the PE header.

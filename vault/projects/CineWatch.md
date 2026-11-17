@@ -28,6 +28,3 @@ The data comes from the TMDB movie dataset (v11). The processed TF-IDF matrix is
 ## Running it on a free plan
 
 The hosted demo on Render loads a 1,000-film sample instead of the full dataset, to stay within the free plan's memory.
-
-> [!todo] TODO
-> Devansh: add when you built this, whether it was a solo or a team project, and what you learned from it. The repository does not say.

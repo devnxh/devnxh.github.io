@@ -16,9 +16,6 @@ PE-Sentinel ist ein Kommandozeilenwerkzeug in Python. Es analysiert Windows-PE-D
 
 Ein einzelnes Signal, etwa eine hohe Entropie, sagt für sich genommen wenig aus.
 
-> [!todo] TODO
-> Devansh: Ergänze ein oder zwei Sätze dazu, was dich zu diesem Projekt gebracht hat.
-
 ## Was ich gebaut habe
 
 - **Fingerabdruck der Datei:** SHA-256- und MD5-Hashes sowie eine Prüfung des PE-Headers.
