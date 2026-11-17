@@ -24,3 +24,7 @@ Die Daten stammen aus dem TMDB-Filmdatensatz (v11). Die berechnete TF-IDF-Matrix
 ## Betrieb im kostenlosen Tarif
 
 Die gehostete Demo auf Render lädt eine Stichprobe von 1.000 Filmen statt des vollständigen Datensatzes, damit der Arbeitsspeicher des kostenlosen Tarifs ausreicht.
+
+## Was ich gelernt habe
+
+Inhaltsbasierte Filterung versteht nur, *worum* es in einem Film geht, nicht, was Leute, denen er gefiel, als Nächstes angesehen haben. Die Ähnlichkeit von Genres, Schlagwörtern und Handlung über TF-IDF liefert sinnvolle Nachbarn, kann aber nicht so überraschen wie kollaborative Signale, und ein Film mit dürftiger Inhaltsangabe bekommt dürftige Empfehlungen. Das war eine klare Lehre darüber, die Methode an das anzupassen, was die Daten tatsächlich hergeben – und wo ein inhaltsbasierter Ansatz an seine Grenzen stößt.

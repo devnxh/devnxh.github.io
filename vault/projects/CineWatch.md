@@ -28,3 +28,7 @@ The data comes from the TMDB movie dataset (v11). The processed TF-IDF matrix is
 ## Running it on a free plan
 
 The hosted demo on Render loads a 1,000-film sample instead of the full dataset, to stay within the free plan's memory.
+
+## What I learned
+
+Content-based filtering only understands what a film is *about*, not what people who liked it went on to watch. Matching on the TF-IDF similarity of genres, keywords and plot gives sensible neighbours, but it can't surprise the way collaborative signals can, and a film with a thin overview gets thin recommendations. It was a clear lesson in fitting the method to what the data can actually support, and in where a content-based approach stops being enough.

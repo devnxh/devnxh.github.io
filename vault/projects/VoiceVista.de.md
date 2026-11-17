@@ -51,3 +51,7 @@ Der extrahierte Text wird bereinigt, mit Google Translate übersetzt und neben d
 ## Auszeichnung
 
 VoiceVista hat den **Principal's Choice Award bei TechXcellence-2025** gewonnen. Die Veranstaltung fand am 4. und 5. April 2025 am Government Engineering College Bhavnagar statt und wurde von B2B und dem GDG GECG Bhavnagar Chapter organisiert.
+
+## Was ich anders machen würde
+
+Das schwächste Glied ist der Übersetzungs- und Sprachschritt. Google Translate und gTTS bringen die Wörter hinüber, verlieren aber Tonfall und Timing, sodass der synchronisierte Ton flach klingt und selten zur sprechenden Person passt. Mit mehr Zeit würde ich auf Modelle umsteigen, die die Sprechmelodie erhalten und sich an der Originalsprache ausrichten, und Whisper-Transkriptionen zwischenspeichern, damit ein langes Video die Transkription nicht zweimal bezahlt.

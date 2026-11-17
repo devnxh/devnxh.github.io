@@ -54,3 +54,7 @@ The extracted text is cleaned, translated with Google Translate, and shown next 
 ## Award
 
 VoiceVista won the **Principal's Choice Award at TechXcellence-2025**, held on 4 and 5 April 2025 at Government Engineering College Bhavnagar and organised by B2B and the GDG GECG Bhavnagar Chapter.
+
+## What I would change
+
+The weakest link is the translation and voice step. Google Translate and gTTS get the words across but lose tone and timing, so the dubbed audio sounds flat and rarely lines up with the speaker. Given more time I would move to models that keep prosody and align to the original speech, and cache Whisper transcriptions so a long video does not pay the transcription cost twice.

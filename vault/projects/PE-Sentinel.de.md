@@ -14,7 +14,7 @@ PE-Sentinel ist ein Kommandozeilenwerkzeug in Python. Es analysiert Windows-PE-D
 
 ## Das Problem
 
-Ein einzelnes Signal, etwa eine hohe Entropie, sagt für sich genommen wenig aus.
+Ein einzelnes Signal, etwa eine hohe Entropie, sagt für sich genommen wenig aus. Ich wollte das Gegenteil eines Black-Box-Urteils: ein Werkzeug, das eine Datei anhand ihrer eigenen Struktur bewertet — Hashes, Importe, Entropie, Zeichenketten, YARA — und genau auflistet, welche Befunde den Wert erhöht haben, sodass sich das Ergebnis prüfen statt nur glauben lässt. Genau diese nachvollziehbare Bewertung, bei der sich jeder Punkt auf einen Grund zurückführen lässt, war der Kern des Projekts.
 
 ## Was ich gebaut habe
 

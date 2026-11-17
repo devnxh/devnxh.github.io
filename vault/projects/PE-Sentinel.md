@@ -19,7 +19,7 @@ PE-Sentinel is a Python command-line tool that statically analyses Windows PE fi
 
 ## The problem
 
-A single signal, such as high entropy, means little on its own.
+A single signal, such as high entropy, means little on its own. I wanted the opposite of a black-box verdict: a tool that scores a file from its own structure — hashes, imports, entropy, strings, YARA — and lists exactly which findings pushed the score up, so the result can be checked instead of trusted. Building the scoring that way, where every point traces back to a reason, was the whole point of the project.
 
 ## What I built
 
