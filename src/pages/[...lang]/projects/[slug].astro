@@ -9,6 +9,7 @@ import { LANGS, langFromParam, langParam, localise, switchLang, useTranslations 
 import Base from '../../../layouts/Base.astro';
 import { getBacklinks, getProjects, getRelatedWriteups } from '../../../lib/content';
 import type { TocEntry } from '../../../lib/obsidian/rehype';
+import { personRef } from '../../../lib/schema';
 import { site } from '../../../site.config';
 
 export async function getStaticPaths() {
@@ -44,7 +45,7 @@ const schema = {
   description: project.summary,
   url: new URL(project.url, site.url).href,
   inLanguage: project.contentLang,
-  author: { '@type': 'Person', name: site.name, url: site.url },
+  author: personRef,
   keywords: project.stack.join(', '),
   ...(project.repo ? { codeRepository: project.repo, sameAs: project.repo } : {}),
 };
@@ -80,7 +81,7 @@ const schema = {
     {project.hidden ? <span class="stamp">{t('stamp.draft')}</span> : project.featured && <span class="stamp">{t('stamp.featured')}</span>}
   </div>
 
-  <div style="max-width: 48rem; margin-bottom: var(--s-12)">
+  <div style="max-width: 48rem; margin-bottom: var(--s-8)">
     <Cover title={project.title} caption={`${t('exhibit')} ${project.exhibit} · ${project.title}`} cover={project.cover} priority />
   </div>
 

@@ -7,8 +7,8 @@
     position: relative;
     font-size: var(--text-prose);
     line-height: 1.6;
-    /* About 68 characters of Newsreader per line. `ch` measures the digit 0, which is far wider than the average letter. */
-    --measure: 30em;
+    /* About 80 characters of Newsreader per line. `ch` measures the digit 0, which is far wider than the average letter. */
+    --measure: 36em;
   }
   .prose > * {
     max-width: var(--measure);
@@ -18,7 +18,7 @@
     max-width: none;
   }
   .prose > * + * {
-    margin-top: var(--s-6);
+    margin-top: var(--s-4);
   }
 
   /* --- Headings: hex offset in the margin, anchor link on hover ------------------- */
@@ -30,13 +30,13 @@
     scroll-margin-top: var(--s-8);
   }
   .prose h2 {
-    margin-top: var(--s-16);
-  }
-  .prose h3 {
     margin-top: var(--s-12);
   }
-  .prose h4 {
+  .prose h3 {
     margin-top: var(--s-8);
+  }
+  .prose h4 {
+    margin-top: var(--s-6);
   }
   .prose > :first-child {
     margin-top: 0;
@@ -168,7 +168,7 @@
   .prose hr {
     overflow: hidden;
     white-space: nowrap;
-    margin-block: var(--s-12);
+    margin-block: var(--s-8);
     padding-block: var(--s-4);
     border-block: 1px solid var(--rule);
     font-family: var(--font-mono);
@@ -383,7 +383,7 @@
     display: none;
   }
   .prose .footnotes {
-    margin-top: var(--s-16);
+    margin-top: var(--s-12);
     padding-top: var(--s-6);
     border-top: 1px solid var(--rule);
     font-size: 0.9em;

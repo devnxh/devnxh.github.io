@@ -195,7 +195,7 @@
 }
 @media (min-width: 64rem) {
   :root {
-    --gutter: var(--s-12);
+    --gutter: var(--s-8);
   }
 }
 

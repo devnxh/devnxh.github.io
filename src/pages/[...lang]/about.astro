@@ -4,9 +4,10 @@ import { render } from 'astro:content';
 import sharp from 'sharp';
 import ContentNotice from '../../components/ContentNotice.astro';
 import Prose from '../../components/Prose.astro';
-import { langFromParam, staticLangPaths, switchLang, useTranslations } from '../../i18n';
+import { langFromParam, localise, staticLangPaths, switchLang, useTranslations } from '../../i18n';
 import Base from '../../layouts/Base.astro';
 import { getPage } from '../../lib/content';
+import { personSchema, profilePageSchema } from '../../lib/schema';
 import { site } from '../../site.config';
 
 export const getStaticPaths = staticLangPaths;
@@ -20,17 +21,7 @@ const { Content, remarkPluginFrontmatter } = await render(page.entry);
 const hasCv = existsSync(`public${site.cvPath}`);
 const photo = existsSync(`public${site.photoPath}`) ? await sharp(`public${site.photoPath}`).metadata() : undefined;
 
-const person = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: site.name,
-  url: site.url,
-  jobTitle: 'Security Analyst',
-  description: page.description,
-  address: { '@type': 'PostalAddress', addressLocality: 'Bhavnagar', addressRegion: 'Gujarat', addressCountry: 'IN' },
-  sameAs: Object.values(site.links),
-  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Government Engineering College Bhavnagar' },
-};
+const jsonLd = [personSchema(lang, page.description), profilePageSchema(lang, new URL(localise('/about/', lang), site.url).href)];
 ---
 
 <Base
@@ -38,7 +29,7 @@ const person = {
   title={page.title}
   description={page.description}
   section="about"
-  jsonLd={person}
+  jsonLd={jsonLd}
   hasMath={Boolean(remarkPluginFrontmatter.hasMath)}
   canonical={page.fallback ? switchLang(Astro.url.pathname, 'en') : undefined}
 >
@@ -76,7 +67,7 @@ const person = {
       </div>
     </section>
 
-    <div class="grid" style="padding-block: var(--s-12)">
+    <div class="grid" style="padding-block: var(--s-8)">
       <div class="margin"></div>
       <div class="body">
         <Prose lang={lang} contentLang={page.contentLang}><Content /></Prose>

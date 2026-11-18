@@ -8,6 +8,7 @@ import WriteupRow from '../../components/WriteupRow.astro';
 import { formatDate, isoDate, langFromParam, localise, staticLangPaths, useTranslations } from '../../i18n';
 import Base from '../../layouts/Base.astro';
 import { getProjects, getWriteups } from '../../lib/content';
+import { personSchema, profilePageSchema, websiteSchema } from '../../lib/schema';
 import { site } from '../../site.config';
 
 export const getStaticPaths = staticLangPaths;
@@ -37,20 +38,10 @@ const proof = site.proof.map((item) => ({
 const projectUrl = (slug: string | undefined) => projects.find((project) => project.slug === slug)?.url;
 const writeupUrl = (slug: string | undefined) => writeups.find((writeup) => writeup.slug === slug)?.url;
 
-const person = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: site.name,
-  url: site.url,
-  jobTitle: 'Security Analyst',
-  description: site.description[lang],
-  address: { '@type': 'PostalAddress', addressLocality: 'Bhavnagar', addressRegion: 'Gujarat', addressCountry: 'IN' },
-  sameAs: Object.values(site.links),
-  knowsLanguage: ['en', 'gu', 'hi', 'de'],
-};
+const jsonLd = [websiteSchema(lang), personSchema(lang), profilePageSchema(lang, new URL(localise('/', lang), site.url).href)];
 ---
 
-<Base lang={lang} description={site.description[lang]} jsonLd={person}>
+<Base lang={lang} description={site.description[lang]} jsonLd={jsonLd}>
   <div class="masthead">
     <div class="masthead-main">
       <h1>{site.name}</h1>

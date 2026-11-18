@@ -10,6 +10,7 @@ import Base from '../../../layouts/Base.astro';
 import { getBacklinks, getWriteups, relatedByTag } from '../../../lib/content';
 import type { TocEntry } from '../../../lib/obsidian/rehype';
 import { tagUrl } from '../../../lib/obsidian/remark/inline';
+import { personRef } from '../../../lib/schema';
 import { site } from '../../../site.config';
 
 export async function getStaticPaths() {
@@ -48,7 +49,7 @@ const schema = {
   inLanguage: writeup.contentLang,
   url: new URL(writeup.url, site.url).href,
   mainEntityOfPage: new URL(writeup.url, site.url).href,
-  author: { '@type': 'Person', name: site.name, url: site.url },
+  author: personRef,
   keywords: writeup.tags.join(', '),
   image: new URL(`/og/${writeup.url.replace(/^\/|\/$/g, '')}.png`, site.url).href,
 };
@@ -92,7 +93,7 @@ const schema = {
 
   {
     writeup.cover && (
-      <div style="max-width: 48rem; margin-bottom: var(--s-12)">
+      <div style="max-width: 48rem; margin-bottom: var(--s-8)">
         <Cover title={writeup.title} cover={writeup.cover} priority />
       </div>
     )
